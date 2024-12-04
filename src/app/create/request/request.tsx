@@ -17,7 +17,6 @@ const CreateRequest = () => {
   const [ isLoading, setIsloading ] = useState(false);
   const router = useRouter();
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -34,6 +33,7 @@ const CreateRequest = () => {
       setHari('');
       setMapel('');
       setKelas('');
+
       setIsloading(false);
       router.push('/');
     } catch (error) {
@@ -55,7 +55,7 @@ const CreateRequest = () => {
           <DialogTitle>reQuest</DialogTitle>
           <DialogDescription>Masukkan data guru yang ingin <span className='text-orange-600'>reQuest</span>
           <br />
-          <span className='text-red-700'>*data wajib di isi, agar bisa terkirim ke db</span>
+          <span className='text-red-700'>*Data wajib di isi, </span>
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>

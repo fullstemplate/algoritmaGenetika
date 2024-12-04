@@ -8,6 +8,7 @@ export async function POST(req: NextRequest) {
 
   if (!guru || !hari || !mapel || !kelas) {
     return NextResponse.json(
+      
       { message: "Nama kelas dan ruangan tidak boleh kosong" },
       { status: 400 }
     );
