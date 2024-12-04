@@ -1,0 +1,12 @@
+.conferm{
+    position: absolute;
+    right: 17px;
+    bottom: 20px;
+    border: 1px solid white;
+    border-radius: 6px;
+    padding: 2px;
+}
+.conferm:hover{
+    background-color: rgba(255, 255, 255, 0.405);
+    color: #415d43;
+}
