@@ -10,8 +10,10 @@ import Swal from 'sweetalert2';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 const CreateRequest = () => {
-  const [ id_guru, setIdGuru ] = useState('');
+  const [ guru, setGuru ] = useState('');
   const [ hari, setHari ] = useState('');
+  const [ mapel, setMapel ] = useState('');
+  const [ kelas, setKelas ] = useState('');
   const [ isLoading, setIsloading ] = useState(false);
   const router = useRouter();
 
@@ -26,10 +28,12 @@ const CreateRequest = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id_guru, hari }),
+        body: JSON.stringify({ guru, hari, mapel, kelas }),
       });
-      setIdGuru('');
+      setGuru('');
       setHari('');
+      setMapel('');
+      setKelas('');
       setIsloading(false);
       router.push('/');
     } catch (error) {
@@ -40,7 +44,7 @@ const CreateRequest = () => {
         text: "Terjadi kesalahan. Silakan coba lagi nanti.",
       });
     }
-  };
+  };  
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -49,7 +53,10 @@ const CreateRequest = () => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>reQuest</DialogTitle>
-          <DialogDescription>Masukkan data guru yang ingin reQuest</DialogDescription>
+          <DialogDescription>Masukkan data guru yang ingin <span className='text-orange-600'>reQuest</span>
+          <br />
+          <span className='text-red-700'>*data wajib di isi, agar bisa terkirim ke db</span>
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
         <div className="grid gap-4 py-4">
@@ -58,20 +65,50 @@ const CreateRequest = () => {
               htmlFor="name"
               className="text-right"
             >
-              id_guru
+              Guru
             </label>
             <Input
-              type="number"
               min={1}
               max={100}
-              id="number"
-              value={id_guru} 
-              onChange={(e) => setIdGuru(e.target.value)}
+              id="guru"
+              value={guru} 
+              onChange={(e) => setGuru(e.target.value)}
               // defaultValue="Pedro Duarte"
               placeholder="Request guru"
               className="col-span-3"
             />
           </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <label
+              htmlFor="username"
+              className="text-right"
+            >
+              Mapel
+            </label>
+            <Input
+              id="mapel"
+              value={mapel}
+              onChange={(e) => setMapel(e.target.value)}
+              placeholder="Request mapel"
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <label
+              htmlFor="username"
+              className="text-right"
+            >
+              Kelas
+            </label>
+            <Input
+              id="kelas"
+              value={kelas}
+              onChange={(e) => setKelas(e.target.value)}
+              placeholder="Request kelas"
+              className="col-span-3"
+            />
+          </div>
+          
           <div className="grid grid-cols-4 items-center gap-4">
             <label
               htmlFor="username"
@@ -83,11 +120,10 @@ const CreateRequest = () => {
               id="hari"
               value={hari}
               onChange={(e) => setHari(e.target.value)}
-              placeholder="Request mapel"
+              placeholder="Request hari"
               className="col-span-3"
             />
           </div>
-          
         </div>
         <DialogFooter>
           <Button disabled={isLoading} type="submit">{isLoading ? 'loading..' : 'Add'}</Button>

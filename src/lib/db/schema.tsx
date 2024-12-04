@@ -68,11 +68,10 @@ const guru = sqliteTable("guru",{
 
 const request = sqliteTable("request", { 
     id_request: integer("id_request").primaryKey(), 
-    nama_guru: integer("nama_guru"),                                                                    
+    guru: integer("guru"),                                                                    
+    mapel: text("mapel"),
+    kelas: text("kelas"),
     hari: text("hari"), 
-    nama_mapel: text("nama_mapel"),
-    nama_kelas: text("nama_kelas"),
-     
 });
  
 const tugasGuru = sqliteTable("tugas_guru", {

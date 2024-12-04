@@ -4,9 +4,9 @@ import { request } from "@/lib/db/schema";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { id_guru, hari, } = body;
+  const { guru, hari, mapel, kelas } = body;
 
-  if (!id_guru || !hari) {
+  if (!guru || !hari || !mapel || !kelas) {
     return NextResponse.json(
       { message: "Nama kelas dan ruangan tidak boleh kosong" },
       { status: 400 }
@@ -15,8 +15,10 @@ export async function POST(req: NextRequest) {
 
   try {
     await db.insert(request).values({
-      id_guru,  
+      guru,  
       hari,
+      mapel,
+      kelas,
     });
     return NextResponse.json({ message: "Kelas berhasil ditambahkan!" });
   } catch (error) {
