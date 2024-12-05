@@ -17,7 +17,7 @@ export default function Login() {
       <form action="submit" className="flex flex-col items-center justify-center px-12 gap-2 ">
         <input type="username" name="username" placeholder="Username " className="px-2 py-1 font-sans rounded-md border-2 text-black" />
         <input type="password" name="password" placeholder="********" className="px-2 py-1 font-sans rounded-md border-2 text-black" />
-        <a href="/api/auth/signin"  id="login" className={buttonVariants({ variant: "destructive" })}>Login white gmail   </a> 
+        <a href="/api/auth/signin"  id="login" className={buttonVariants({ variant: "destructive" })}>Gmail</a> 
       </form>
     </div>
   );
