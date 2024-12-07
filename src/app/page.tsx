@@ -47,10 +47,10 @@ export default async function Home() {
       </div>
       <div className={style.proses}>
         <a
-          href=""
+          href="/Components/Schedule"
           className=" font-sans"
         >
-          Proses
+          Schadule
         </a>
       </div>
     </div>

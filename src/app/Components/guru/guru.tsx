@@ -17,7 +17,7 @@ export default async function Guru() {
           <TableRow> 
             <TableHead className="w-[100px]">iD</TableHead>
             <TableHead>Nama Guru</TableHead>
-            <TableHead>Email</TableHead>
+            {/* <TableHead>Email</TableHead> */}
             <TableHead>Pendidikan</TableHead>
             <TableHead className="text-right">*******</TableHead>
           </TableRow>
@@ -27,9 +27,9 @@ export default async function Guru() {
           <TableRow key={index}>
             <TableCell className="font-medium">{guru.id_guru}</TableCell>
             <TableCell>{guru.nama_guru}</TableCell>
-            <TableCell>{guru.email}</TableCell>
+            {/* <TableCell>{guru.email}</TableCell> */}
             <TableCell>{guru.pendidikan}</TableCell>
-            <TableCell className="text-right">Delete</TableCell>
+            <TableCell className="text-right text-red-600">Delete</TableCell>
           </TableRow>
           ))}
         </TableBody>

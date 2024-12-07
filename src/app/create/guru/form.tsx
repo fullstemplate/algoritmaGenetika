@@ -52,13 +52,13 @@ const CreateGuru = () => {
         value={nama_guru}
         onChange={(e) => setNamaGuru(e.target.value)}
       />
-      <input
+      {/* <input
         type="text"
         placeholder="example@gmail.com"
         className="rounded-md px-2 py-1 text-green-950 font-sans"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-      />
+      /> */}
       <input
         type="text"
         placeholder="Pendidikan"

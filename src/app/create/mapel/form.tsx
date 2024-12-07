@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 const CreateMapel = () => {
   const [nama_mapel, setNama_mapel] = useState("");
   const [kelas, setKelas] = useState("");
-  const [beban_jam, setBeban_jam] = useState("");
+  const [kode_mapel, setKode_mapel] = useState("");
   const [isLoading, setIsloading] = useState(false);
   const router = useRouter();
 
@@ -23,12 +23,12 @@ const CreateMapel = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nama_mapel, kelas, beban_jam }),
+        body: JSON.stringify({ nama_mapel, kelas, kode_mapel }),
       });
       
           setNama_mapel("");
           setKelas("");
-          setBeban_jam("");
+          setKode_mapel("");
           setIsloading(false);
           router.push("/"); 
 
@@ -52,19 +52,19 @@ const CreateMapel = () => {
         value={nama_mapel}
         onChange={(e) => setNama_mapel(e.target.value)}
       />
-      <input
+      {/* <input
         type="text"
         placeholder="Kelas"
         className="rounded-md px-2 py-1 text-green-950 font-sans"
         value={kelas}
         onChange={(e) => setKelas(e.target.value)}
-      />
+      /> */}
       <input
-        type="number"
-        placeholder="Beban Jam"
+        type="text"
+        placeholder="Kode mapel"
         className="rounded-md px-2 py-1 text-green-950 font-sans"
-        value={beban_jam}
-        onChange={(e) => setBeban_jam(e.target.value)}
+        value={kode_mapel}
+        onChange={(e) => setKode_mapel(e.target.value)}
       />
       <Button type="submit" disabled={isLoading} >{isLoading ? 'wait.' : 'add'}</Button>
     </form>

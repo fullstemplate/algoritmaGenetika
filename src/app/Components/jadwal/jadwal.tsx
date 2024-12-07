@@ -17,7 +17,7 @@ export default async function jadwal() {
           <TableRow> 
             <TableHead className="w-[100px]">iD</TableHead>
             <TableHead>Hari</TableHead>
-            <TableHead>Jumlah Sesi</TableHead>
+            <TableHead>Sesi</TableHead>
             <TableHead>Jam</TableHead>
             <TableHead className="text-right">*******</TableHead>
           </TableRow>
@@ -29,7 +29,7 @@ export default async function jadwal() {
             <TableCell>{jadwal.hari}</TableCell>
             <TableCell>{jadwal.jumlah_sesi}</TableCell>
             <TableCell>{jadwal.jam}</TableCell>
-            <TableCell className="text-right">Delete</TableCell>
+            <TableCell className="text-right text-red-600">Delete</TableCell>
           </TableRow>
           ))}
         </TableBody>

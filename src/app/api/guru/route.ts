@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   const body = await req.json();
   const { nama_guru, email, pendidikan } = body;
 
-  if (!nama_guru || !email || !pendidikan) {
+  if (!nama_guru || !pendidikan) {
     return NextResponse.json(
       { message: "Nama kelas dan ruangan tidak boleh kosong" },
       { status: 400 }

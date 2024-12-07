@@ -28,7 +28,7 @@ export default async function Kelas() {
             <TableCell className="font-medium">{kelas.id_kelas}</TableCell>
             <TableCell>{kelas.nama_kelas}</TableCell>
             <TableCell>{kelas.ruangan}</TableCell>
-            <TableCell className="text-right">Delete</TableCell>
+            <TableCell className="text-right text-red-600">Delete</TableCell>
           </TableRow>
           ))}
         </TableBody>

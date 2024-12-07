@@ -18,7 +18,7 @@ export default async function Maple() {
           <TableRow> 
             <TableHead className="w-[100px]">iD</TableHead>
             <TableHead>Nama Mapel</TableHead>
-            <TableHead>Kelas</TableHead>
+            {/* <TableHead>Kelas</TableHead> */}
             <TableHead>Beban Jam</TableHead>
             <TableHead className="text-right">*******</TableHead>
           </TableRow>
@@ -28,9 +28,9 @@ export default async function Maple() {
           <TableRow key={index}>
             <TableCell className="font-medium">{mapel.id_mapel}</TableCell>
             <TableCell>{mapel.nama_mapel}</TableCell>
-            <TableCell>{mapel.kelas}</TableCell>
-            <TableCell>{mapel.beban_jam}</TableCell>
-            <TableCell className="text-right">Delete</TableCell>
+            {/* <TableCell>{mapel.kelas}</TableCell> */}
+            <TableCell>{mapel.kode_mapel}</TableCell>
+            <TableCell className="text-righ text-red-600">Delete</TableCell>
           </TableRow>
           ))}
         </TableBody>

@@ -4,9 +4,9 @@ import { mapel } from "@/lib/db/schema";
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { nama_mapel, kelas, beban_jam } = body;
+  const { nama_mapel, kode_mapel } = body;
 
-  if (!nama_mapel || !kelas || !beban_jam) {
+  if (!nama_mapel || !kode_mapel) {
     return NextResponse.json(
       { message: "Nama kelas dan ruangan tidak boleh kosong" },
       { status: 400 }
@@ -16,8 +16,7 @@ export async function POST(req: Request) {
   try {
     await db.insert(mapel).values({
       nama_mapel,
-      kelas,
-      beban_jam,
+      kode_mapel
     });
     return NextResponse.json({ message: "Kelas berhasil ditambahkan!" });
   } catch (error) {

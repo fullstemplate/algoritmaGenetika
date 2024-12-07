@@ -56,14 +56,16 @@ const CreateJadwal = () => {
         onChange={(e) => setHari(e.target.value)}
       />
       <input
-        type="text"
-        placeholder="jumlah sesi"
+        type="number" 
+        min={1}
+        max={99999}
+        placeholder="sesi"
         className="rounded-md px-2 py-1 text-green-950 font-sans"
         value={jumlah_sesi}
         onChange={(e) => setJumlahSesi(e.target.value)}
       />
       <input
-        type="text"
+        type="time"
         placeholder="Jam"
         className="rounded-md px-2 py-1 text-green-950 font-sans"
         value={jam}
