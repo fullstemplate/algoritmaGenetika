@@ -61,10 +61,23 @@ const kelas = sqliteTable("kelas",  {
 const guru = sqliteTable("guru",{
     id_guru: integer("id_guru").primaryKey(),
     nama_guru: text("nama_guru"),
-    email: text("email"),
     pendidikan: text ("pendidikan"),
-    status: text("status") 
 });
+
+
+const mapel = sqliteTable("mapel", { 
+  id_mapel: integer("id_mapel").primaryKey(),
+  nama_mapel: text("nama_mapel"),
+  kode_mapel: integer("kode_mapel"),
+});
+
+const jadwal = sqliteTable("jadwal", {
+  id_jadwal: integer("id_jadwal").primaryKey(),
+  hari: text("hari"),
+  jumlah_sesi: integer ("jumlah_sesi"),    
+  jam: integer("jam"),
+});
+
 
 const request = sqliteTable("request", { 
     id_request: integer("id_request").primaryKey(), 
@@ -83,21 +96,6 @@ const tugasGuru = sqliteTable("tugas_guru", {
   tahun_ajaran: integer("tahun_ajaran"),
   sisa_jam: integer("sisa_jam"),
   beban_jam: integer("beban_jam"),
-});
-
- const mapel = sqliteTable("mapel", { 
-    id_mapel: integer("id_mapel").primaryKey(),
-    nama_mapel: text("nama_mapel"),
-    kode_mapel: integer("kode_mapel"),
-    kelas: text("kelas"),
-    beban_jam: text("beban_jam"),
-});
-
-const jadwal = sqliteTable("jadwal", {
-    id_jadwal: integer("id_jadwal").primaryKey(),
-    hari: text("hari"),
-    jumlah_sesi: integer ("jumlah_sesi"),    
-    jam: integer("jam"),
 });
 
 
