@@ -68,11 +68,11 @@ const guru = sqliteTable("guru",{
 const mapel = sqliteTable("mapel", { 
   id_mapel: integer("id_mapel").primaryKey(),
   nama_mapel: text("nama_mapel"),
-  kode_mapel: integer("kode_mapel"),
+  kode_mapel: text("kode_mapel"),
 });
 
-const jadwal = sqliteTable("jadwal", {
-  id_jadwal: integer("id_jadwal").primaryKey(),
+const waktu = sqliteTable("waktu", {
+  id_waktu: integer("id_waktu").primaryKey(),
   hari: text("hari"),
   jumlah_sesi: integer ("jumlah_sesi"),    
   jam: integer("jam"),
@@ -99,4 +99,4 @@ const tugasGuru = sqliteTable("tugas_guru", {
 });
 
 
-export {kelas, guru, request, mapel, jadwal, tugasGuru };
+export {kelas, guru, request, mapel, waktu, tugasGuru };

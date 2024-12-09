@@ -21,7 +21,7 @@ const CreateJadwal = () => {
      setIsloading(true);
 
     try {
-      const response = await fetch("/api/jadwal", {
+      const response = await fetch("/api/waktu", {
         method: "POST",
         headers: {  
           "Content-Type": "application/json",

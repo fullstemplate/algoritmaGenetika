@@ -19,7 +19,7 @@ export default async function Maple() {
             <TableHead className="w-[100px]">iD</TableHead>
             <TableHead>Nama Mapel</TableHead>
             {/* <TableHead>Kelas</TableHead> */}
-            <TableHead>Beban Jam</TableHead>
+            <TableHead>Kode Mapel</TableHead>
             <TableHead className="text-right">*******</TableHead>
           </TableRow>
         </TableHeader>

@@ -1,104 +1,156 @@
-import { db } from "@/lib/db/db";
-import { kelas, guru, mapel, jadwal } from "@/lib/db/schema";
+import { db } from "@/lib/db/db"; // Koneksi ke database
+import { Kelas, Guru, Mapel, Waktu } from "@/lib/genetic-algorithm/types"; // Tipe data untuk TypeScript
+import { mapel, kelas, guru, waktu } from "@/lib/db/schema"; // Skema tabel ORM
+import { NotNull } from "drizzle-orm";
 
-type ScheduleGene = {
-  classId: number;
-  teacherId: number;
-  subjectId: number;
-  day: string;
-  session: number;
-  time: string;
-};
-
-// Ambil data dari database
-async function fetchData() {
-  const classes = await db.query.kelas.findMany(); // Data kelas
-  const teachers = await db.query.guru.findMany(); // Data guru
-  const subjects = await db.query.mapel.findMany(); // Data mata pelajaran
-  const scheduleData = await db.query.jadwal.findMany(); // Data jadwal (hari, jam, sesi)
-
-  return { classes, teachers, subjects, scheduleData };
+// Tipe data untuk jadwal
+export interface Schedule {
+  id_waktu: number;
+  hari: string;
+  jam: number;
+  jumlah_sesi: number;
+  nama_kelas: string;
+  nama_guru: string;
+  nama_mapel: string;
 }
 
-export async function runGeneticAlgorithm() {
-  const { classes, teachers, subjects, scheduleData } = await fetchData();
+// Fungsi untuk algoritma genetika
+export async function geneticAlgorithm(): Promise<Schedule[]> {
+  try {
+    const dataMapel: Mapel[] = await db.query.mapel.findMany();
+    const dataKelas: Kelas[] = await db.query.kelas.findMany();
+    const dataGuru: Guru[] = await db.query.guru.findMany();
+    const dataWaktu: Waktu[] = await db.query.waktu.findMany();
 
-  const times = scheduleData.map((item) => ({
-    day: item.hari,
-    session: item.sesi,
-    time: item.jam,
-  }));
+    // Gabungkan data untuk membuat jadwal awal
+    const schedulesData: Schedule[] = dataWaktu.flatMap((waktuItem) =>
+      dataKelas.flatMap((kelasItem) =>
+        dataGuru.flatMap((guruItem) =>
+          dataMapel.map((mapelItem) => ({
+            id_waktu: waktuItem.id_waktu!,
+            hari: waktuItem.hari || "Unknown",
+            jam: waktuItem.jam || 0,
+            jumlah_sesi: waktuItem.jumlah_sesi || 0,
+            nama_kelas: kelasItem.nama_kelas || "Unknown",
+            nama_guru: guruItem.nama_guru || "Unknown",
+            nama_mapel: mapelItem.nama_mapel || "Unknown",
+          }))
+        )
+      )
+    );
 
-  // Inisialisasi populasi
-  let population = Array.from({ length: 50 }, () =>
-    classes.map((cls) => ({
-      classId: cls.id,
-      teacherId: teachers[Math.floor(Math.random() * teachers.length)].id,
-      subjectId: subjects[Math.floor(Math.random() * subjects.length)].id,
-      day: times[Math.floor(Math.random() * times.length)].day,
-      session: times[Math.floor(Math.random() * times.length)].session,
-      time: times[Math.floor(Math.random() * times.length)].time,
-    }))
-  );
+    console.log("Schedules data sebelum pemrosesan genetika:", schedulesData); // Log data sebelum diproses
 
-  // Iterasi Generasi Algoritma Genetika
-  for (let generation = 0; generation < 100; generation++) {
-    const fitnessResults = population.map((schedule) => {
-      let penalty = 0;
+    // Tahapan algoritma genetika
+    const populationSize = 100; // Ukuran populasi
+    const generations = 50; // Jumlah generasi
+    const mutationRate = 0.1; // Peluang mutasi
 
-      // Deteksi Konflik Jadwal (Guru dan Kelas)
-      const timeConflicts = new Map<string, Set<number>>();
-      schedule.forEach(({ day, session, classId, teacherId }) => {
-        const key = `${day}-${session}`;
-        if (!timeConflicts.has(key)) timeConflicts.set(key, new Set());
-        if (timeConflicts.get(key)?.has(teacherId) || timeConflicts.get(key)?.has(classId)) {
-          penalty++;
-        } else {
-          timeConflicts.get(key)?.add(teacherId);
-          timeConflicts.get(key)?.add(classId);
-        }
-      });
+    // Inisialisasi populasi awal
+    let population: { schedule: Schedule[]; fitness: number }[] = Array.from(
+      { length: populationSize },
+      () => ({
+        schedule: randomizeSchedule(schedulesData),
+        fitness: 0,
+      })
+    );
 
-      return { penalty, schedule };
-    });
+    for (let gen = 0; gen < generations; gen++) {
+      // Evaluasi fitness
+      population = evaluateFitness(population);
 
-    // Seleksi: Ambil individu terbaik
-    const parents = fitnessResults
-      .sort((a, b) => a.penalty - b.penalty)
-      .slice(0, population.length / 2)
-      .map((result) => result.schedule);
-
-    // Crossover dan Mutasi
-    population = [];
-    while (population.length < 50) {
-      const [parent1, parent2] = [
-        parents[Math.floor(Math.random() * parents.length)],
-        parents[Math.floor(Math.random() * parents.length)],
-      ];
+      // Seleksi
+      const selectedPopulation = selectParents(population);
 
       // Crossover
-      const child = parent1.map((gene, i) =>
-        i < parent1.length / 2 ? gene : parent2[i]
-      );
+      const offspring = crossover(selectedPopulation);
 
       // Mutasi
-      const mutatedChild = child.map((gene) => {
-        if (Math.random() < 0.1) {
-          const newTime = times[Math.floor(Math.random() * times.length)];
-          return {
-            ...gene,
-            day: newTime.day,
-            session: newTime.session,
-            time: newTime.time,
-          };
-        }
-        return gene;
-      });
+      const mutatedOffspring = mutate(offspring, mutationRate);
 
-      population.push(mutatedChild);
+      // Generasi baru
+      population = [...selectedPopulation, ...mutatedOffspring];
     }
+
+    // Ambil jadwal terbaik berdasarkan fitness
+    const bestSchedule = population.sort((a, b) => b.fitness - a.fitness)[0];
+    console.log("Jadwal terbaik:", bestSchedule); // Log jadwal terbaik
+
+    return bestSchedule.schedule;
+  } catch (error) {
+    console.error("Error in geneticAlgorithm:", error);
+    throw error;
+  }
+}
+
+// Fungsi tambahan untuk algoritma genetika
+function randomizeSchedule(schedules: Schedule[]): Schedule[] {
+  return schedules.sort(() => Math.random() - 0.5); // Mengacak jadwal
+}
+
+function evaluateFitness(
+  population: { schedule: Schedule[]; fitness: number }[]
+): { schedule: Schedule[]; fitness: number }[] {
+  return population.map((individual) => {
+    // Logika evaluasi fitness
+    let fitness = 0;
+
+    // Contoh aturan evaluasi sederhana: tidak ada bentrok waktu
+    const usedTimes = new Set();
+    for (const entry of individual.schedule) {
+      const key = `${entry.hari}-${entry.jam}-${entry.nama_kelas}`;
+      if (!usedTimes.has(key)) {
+        fitness += 1; // Poin untuk tidak ada bentrok
+        usedTimes.add(key);
+      }
+    }
+
+    return { ...individual, fitness };
+  });
+}
+
+function selectParents(
+  population: { schedule: Schedule[]; fitness: number }[]
+): { schedule: Schedule[]; fitness: number }[] {
+  // Seleksi berdasarkan fitness (roulette wheel selection)
+  population.sort((a, b) => b.fitness - a.fitness);
+  return population.slice(0, population.length / 2); // Pilih separuh terbaik
+}
+
+function crossover(
+  parents: { schedule: Schedule[]; fitness: number }[]
+): { schedule: Schedule[]; fitness: number }[] {
+  const offspring: { schedule: Schedule[]; fitness: number }[] = [];
+
+  for (let i = 0; i < parents.length; i += 2) {
+    const parent1 = parents[i];
+    const parent2 = parents[i + 1] || parents[0];
+
+    const splitPoint = Math.floor(parent1.schedule.length / 2);
+    const childSchedule = [
+      ...parent1.schedule.slice(0, splitPoint),
+      ...parent2.schedule.slice(splitPoint),
+    ];
+
+    offspring.push({ schedule: childSchedule, fitness: 0 });
   }
 
-  // Hasil terbaik
-  return fitnessResults.sort((a, b) => a.penalty - b.penalty)[0].schedule;
+  return offspring;
+}
+
+function mutate(
+  population: { schedule: Schedule[]; fitness: number }[],
+  mutationRate: number
+): { schedule: Schedule[]; fitness: number }[] {
+  return population.map((individual) => {
+    const mutatedSchedule = individual.schedule.map((entry) => {
+      if (Math.random() < mutationRate) {
+        // Mutasi: Mengacak data waktu
+        entry.jam = Math.floor(Math.random() * 8) + 7; // Contoh: jam antara 7-14
+      }
+      return entry;
+    });
+
+    return { ...individual, schedule: mutatedSchedule };
+  });
 }

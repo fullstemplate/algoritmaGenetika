@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Kelas from './Components/kelas/kelas';
 import Guru from './Components/guru/guru';
 import Mapel from './Components/mapel/mapel';
-import Jadwal from './Components/jadwal/jadwal';
+import Jadwal from './Components/waktu/waktu';
 import style from '../style/section.module.css';
 import Login from './login/page';
 import { auth } from '@/lib/auth';
@@ -47,7 +47,7 @@ export default async function Home() {
       </div>
       <div className={style.proses}>
         <a
-          href="/Components/Schedule"
+          href="/output/"
           className=" font-sans"
         >
           Schadule
