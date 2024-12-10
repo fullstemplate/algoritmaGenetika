@@ -1,4 +1,4 @@
-import React from "react";
+ import React from "react";
 
 interface Schedule {
   id_waktu: number;
@@ -19,23 +19,23 @@ const ScheduleTable: React.FC<Props> = ({ schedules }) => {
     <table className="table-auto w-full border border-gray-300">
       <thead>
         <tr>
-          <th className="px-4 py-2 border">Hari</th>
-          <th className="px-4 py-2 border">Jam</th>
-          <th className="px-4 py-2 border">Jumlah Sesi</th>
-          <th className="px-4 py-2 border">Kelas</th>
-          <th className="px-4 py-2 border">Guru</th>
-          <th className="px-4 py-2 border">Mata Pelajaran</th>
+          <th className="px-4 py-2 border text-white">Hari</th>
+          <th className="px-4 py-2 border text-white">Jam</th>
+          <th className="px-4 py-2 border text-white">Jumlah Sesi</th>
+          <th className="px-4 py-2 border text-white">Kelas</th>
+          <th className="px-4 py-2 border text-white">Guru</th>
+          <th className="px-4 py-2 border text-white">Mata Pelajaran</th>
         </tr>
       </thead>
       <tbody>
         {schedules.map((schedule, index) => (
           <tr key={index}>
-            <td className="px-4 py-2 border">{schedule.hari}</td>
-            <td className="px-4 py-2 border">{schedule.jam}</td>
-            <td className="px-4 py-2 border">{schedule.jumlah_sesi}</td>
-            <td className="px-4 py-2 border">{schedule.nama_kelas}</td>
-            <td className="px-4 py-2 border">{schedule.nama_guru}</td>
-            <td className="px-4 py-2 border">{schedule.nama_mapel}</td>
+            <td className="px-4 py-2 border text-white">{schedule.hari}</td>
+            <td className="px-4 py-2 border text-white">{schedule.jam}</td>
+            <td className="px-4 py-2 border text-white">{schedule.jumlah_sesi}</td>
+            <td className="px-4 py-2 border text-white">{schedule.nama_kelas}</td>
+            <td className="px-4 py-2 border text-white">{schedule.nama_guru}</td>
+            <td className="px-4 py-2 border text-white">{schedule.nama_mapel}</td>
           </tr>
         ))}
       </tbody>

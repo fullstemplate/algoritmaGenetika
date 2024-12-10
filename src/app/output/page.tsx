@@ -40,8 +40,9 @@ export default function OutputPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Jadwal Terbaik</h1>
+      <a href="/" className="text-2xl font-bold mb-4 text-white">Jadwal Terbaik</a>
       <ScheduleTable schedules={schedules} />
+      <i className="text-white">*ini hanya contoh. setiap hari hanya memiliki 1 sesi, jika ingi semua sesi dan data lainnya di masukkan, sulit ngodingnya.. </i>
     </div>
   );
 }

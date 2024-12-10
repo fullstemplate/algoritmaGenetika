@@ -9,7 +9,7 @@ export default async function waktu() {
   const dataJadwal = await db.query.waktu.findMany();
   return (
     <div className={Style.form}>
-      <label className="font-sans font-bold ">JADWAL</label>
+      <label className="font-sans font-bold ">WAKTU</label>
       <CreateJadwal />
       <Table>
         <TableCaption >Masukkan data <span className='text-orange-600'>waktu</span> dengan benar..</TableCaption>

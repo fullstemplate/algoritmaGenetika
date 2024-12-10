@@ -1,6 +1,6 @@
-import { db } from "@/lib/db/db"; // Koneksi ke database
-import { Kelas, Guru, Mapel, Waktu } from "@/lib/genetic-algorithm/types"; // Tipe data untuk TypeScript
-import { mapel, kelas, guru, waktu } from "@/lib/db/schema"; // Skema tabel ORM
+import { db } from "@/lib/db/db";
+import { Kelas, Guru, Mapel, Waktu } from "@/lib/genetic-algorithm/types";
+import { mapel, kelas, guru, waktu } from "@/lib/db/schema";
 import { NotNull } from "drizzle-orm";
 
 // Tipe data untuk jadwal
@@ -14,7 +14,6 @@ export interface Schedule {
   nama_mapel: string;
 }
 
-// Fungsi untuk algoritma genetika
 export async function geneticAlgorithm(): Promise<Schedule[]> {
   try {
     const dataMapel: Mapel[] = await db.query.mapel.findMany();
@@ -39,14 +38,10 @@ export async function geneticAlgorithm(): Promise<Schedule[]> {
       )
     );
 
-    console.log("Schedules data sebelum pemrosesan genetika:", schedulesData); // Log data sebelum diproses
-
-    // Tahapan algoritma genetika
     const populationSize = 100; // Ukuran populasi
     const generations = 50; // Jumlah generasi
     const mutationRate = 0.1; // Peluang mutasi
 
-    // Inisialisasi populasi awal
     let population: { schedule: Schedule[]; fitness: number }[] = Array.from(
       { length: populationSize },
       () => ({
@@ -56,34 +51,40 @@ export async function geneticAlgorithm(): Promise<Schedule[]> {
     );
 
     for (let gen = 0; gen < generations; gen++) {
-      // Evaluasi fitness
       population = evaluateFitness(population);
-
-      // Seleksi
       const selectedPopulation = selectParents(population);
-
-      // Crossover
       const offspring = crossover(selectedPopulation);
-
-      // Mutasi
       const mutatedOffspring = mutate(offspring, mutationRate);
-
-      // Generasi baru
       population = [...selectedPopulation, ...mutatedOffspring];
     }
 
-    // Ambil jadwal terbaik berdasarkan fitness
     const bestSchedule = population.sort((a, b) => b.fitness - a.fitness)[0];
-    console.log("Jadwal terbaik:", bestSchedule); // Log jadwal terbaik
 
-    return bestSchedule.schedule;
+    // Urutkan jadwal berdasarkan hari, jam, dan sesi (id_waktu)
+    const sortedSchedule = bestSchedule.schedule
+      .sort((a, b) => a.id_waktu - b.id_waktu) // Mengurutkan berdasarkan id_waktu untuk memastikan urutan yang benar
+      .map((entry, index, array) => ({
+        ...entry,
+        sesi: array.findIndex((e) => e.id_waktu === entry.id_waktu) + 1, // Menambahkan sesi berdasarkan urutan id_waktu
+      }));
+
+    // Filter untuk mengambil hanya satu sesi per hari dan menghindari bentrok
+    const uniqueDays = new Set<string>();
+    const filteredSchedule = sortedSchedule.filter((entry) => {
+      if (!uniqueDays.has(entry.hari)) {
+        uniqueDays.add(entry.hari);
+        return true; // Masukkan hanya sesi pertama per hari
+      }
+      return false; // Abaikan sesi lain di hari yang sama
+    });
+
+    return filteredSchedule; // Kembalikan hanya jadwal terbaik yang sudah diurutkan
   } catch (error) {
     console.error("Error in geneticAlgorithm:", error);
     throw error;
   }
 }
 
-// Fungsi tambahan untuk algoritma genetika
 function randomizeSchedule(schedules: Schedule[]): Schedule[] {
   return schedules.sort(() => Math.random() - 0.5); // Mengacak jadwal
 }
@@ -92,10 +93,8 @@ function evaluateFitness(
   population: { schedule: Schedule[]; fitness: number }[]
 ): { schedule: Schedule[]; fitness: number }[] {
   return population.map((individual) => {
-    // Logika evaluasi fitness
     let fitness = 0;
 
-    // Contoh aturan evaluasi sederhana: tidak ada bentrok waktu
     const usedTimes = new Set();
     for (const entry of individual.schedule) {
       const key = `${entry.hari}-${entry.jam}-${entry.nama_kelas}`;
@@ -112,7 +111,6 @@ function evaluateFitness(
 function selectParents(
   population: { schedule: Schedule[]; fitness: number }[]
 ): { schedule: Schedule[]; fitness: number }[] {
-  // Seleksi berdasarkan fitness (roulette wheel selection)
   population.sort((a, b) => b.fitness - a.fitness);
   return population.slice(0, population.length / 2); // Pilih separuh terbaik
 }
