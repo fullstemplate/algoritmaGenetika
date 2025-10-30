@@ -13,13 +13,13 @@ export default async function Home() {
   
   const session = await auth();
 
-  if (!session) {
-    return (
-      <div className="flex flex-col">
-        <Login/>
-      </div>
-    );
-  }
+  // if (!session) {
+  //   return (
+  //     <div className="flex flex-col">
+  //       <Login/>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="flex flex-col ">
